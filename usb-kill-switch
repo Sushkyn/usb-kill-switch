@@ -1,10 +1,5 @@
 #!/bin/bash
 
-command -v slock > /dev/null 2>&1 || {
-    echo >&2 "I require slock but it's not installed. Please install it. Aborting."
-    exit 1
-}
-
 get_connected_usb_devices() {
     for dev in /sys/block/*; do
         props=$(udevadm info --query=property --name="${dev##*/}" 2>/dev/null)
@@ -16,11 +11,7 @@ get_connected_usb_devices() {
 }
 
 initial_devices=$(get_connected_usb_devices)
-
-echo "Monitoring USB devices..."
-echo "Initial connected USB devices:"
 echo "$initial_devices"
-
 while true; do
     current_devices=$(get_connected_usb_devices)
 
@@ -29,6 +20,5 @@ while true; do
         slock
         break
     fi
-
     sleep 2
 done
